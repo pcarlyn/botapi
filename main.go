@@ -1,14 +1,18 @@
 package main
 
 import (
-	"fmt"
-	"start/internal/models"
-	"start/internal/utils/requests/variables"
+	"start/cmd/routes"
+
+	"github.com/labstack/echo/v4"
 )
 
 func main() {
 
-	profile, status := variables.PatchVariables(models.Variable{ProfileId: 1, Name: "test", Value: "test"})
-	fmt.Println("Status: ", status)
-	fmt.Printf("Response: %+v\n", profile)
+	e := echo.New()
+
+	botapi := e.Group("/botapi/v1")
+
+	routes.BotApiRoutes(botapi)
+
+	e.Logger.Fatal(e.Start(":1323"))
 }
