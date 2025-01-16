@@ -98,10 +98,14 @@ const Register: React.FC = () => {
       // Сброс полей после успешной регистрации
       setFirstname('');
       setSecondname('');
+      setUserborn('');
+      setUsersex('');
+      setUsersity('');
       setUsername('');
       setPassword('');
       setConfirmPassword('');
-      
+      setCaptcha('');
+
     } catch (error) {
       console.error('Ошибка при регистрации:', error);
       
