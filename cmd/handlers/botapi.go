@@ -6,6 +6,7 @@ import (
 	"start/internal/utils"
 	"start/internal/utils/requests/answers"
 	"start/internal/utils/requests/states"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -21,7 +22,9 @@ func BotApiCommands(c echo.Context) error {
 
 	tgid := userData.Message.From.ID
 
-	cmd := userData.Message.Text
+	cmdMsg := userData.Message.Text
+
+	cmd := strings.Replace(cmdMsg, "/", "", 1)
 
 	answers, _ := answers.GetAnswers("cmd", cmd)
 	state, _ := states.GetStatesById(tgid)
