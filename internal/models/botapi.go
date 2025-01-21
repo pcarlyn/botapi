@@ -10,11 +10,11 @@ type ControllerResponce struct {
 }
 
 type Result struct {
-	UpdateID        int     `json:"update_id"`
-	Message         Message `json:"message"`
-	MyChatMember    string  `json:"my_chat_member"`
-	ChatMember      string  `json:"chat_member"`
-	ChatJoinRequest string  `json:"chat_join_request"`
+	UpdateID int     `json:"update_id"`
+	Message  Message `json:"message"`
+	// MyChatMember    string  `json:"my_chat_member"`
+	// ChatMember      string  `json:"chat_member"`
+	// ChatJoinRequest string  `json:"chat_join_request"`
 }
 
 type Message struct {
@@ -25,11 +25,11 @@ type Message struct {
 	Text                          string                        `json:"text"`
 	Entities                      []Entity                      `json:"entities"`
 	MessageAutoDeleteTimerChanged MessageAutoDeleteTimerChanged `json:"message_auto_delete_timer_changed"`
-	ProximityAlertTriggered       ProximityAlertTriggered       `json:"proximity_alert_triggered"`
-	VoiceChatScheduled            string                        `json:"voice_chat_scheduled"`
-	VoiceChatStarted              string                        `json:"voice_chat_started"`
-	VoiceChatEnded                string                        `json:"voice_chat_ended"`
-	VoiceChatParticipantsInvited  string                        `json:"voice_chat_participants_invited"`
+	// ProximityAlertTriggered       ProximityAlertTriggered       `json:"proximity_alert_triggered"`
+	// VoiceChatScheduled            string                        `json:"voice_chat_scheduled"`
+	// VoiceChatStarted              string                        `json:"voice_chat_started"`
+	// VoiceChatEnded                string                        `json:"voice_chat_ended"`
+	// VoiceChatParticipantsInvited  string                        `json:"voice_chat_participants_invited"`
 }
 
 type MessageAutoDeleteTimerChanged struct {
@@ -42,12 +42,12 @@ type ProximityAlertTriggered struct {
 }
 
 type User struct {
-	ID           int    `json:"id"`
-	IsBot        bool   `json:"is_bot"`
+	ID int `json:"id"`
+	// IsBot        bool   `json:"is_bot"`
 	FirstName    string `json:"first_name"`
 	Username     string `json:"username"`
 	LanguageCode string `json:"language_code"`
-	IsPremium    bool   `json:"is_premium"`
+	// IsPremium    bool   `json:"is_premium"`
 }
 
 type Chat struct {

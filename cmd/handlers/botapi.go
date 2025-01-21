@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"start/internal/models"
 	"start/internal/utils"
 	"start/internal/utils/requests/answers"
@@ -13,6 +14,7 @@ func BotApiCommands(c echo.Context) error {
 
 	var userData models.Result
 	var resp models.ControllerResponce
+	fmt.Println(c.Request().Body)
 	if err := c.Bind(&userData); err != nil {
 		return err
 	}
