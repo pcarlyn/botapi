@@ -9,7 +9,7 @@ import (
 	"start/internal/models"
 )
 
-func PatchStates(state *models.RState) (*models.UpdateResponse, int) {
+func PatchStates(state models.RState) (*models.UpdateResponse, int) {
 
 	url := models.BaseUrl + "/states/"
 

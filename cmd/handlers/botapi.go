@@ -6,6 +6,7 @@ import (
 	"start/internal/utils"
 	"start/internal/utils/requests/answers"
 	"start/internal/utils/requests/states"
+	"start/internal/utils/requests/variables"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -28,14 +29,13 @@ func BotApiCommands(c echo.Context) error {
 
 	answers, _ := answers.GetAnswers("cmd", cmd)
 	state, _ := states.GetStatesById(tgid)
-	// variables, _ := variables.GetVariables(tgid)
+	variables, _ := variables.GetVariables(tgid)
 
-	for _, ans := range answers {
-		if state.State == ans.State {
-			answer := ans
-			utils.BuildAnswer(&answer, &resp)
-		}
-	}
+	answer := utils.FilterAnswers(answers, state, variables)
+	utils.BuildAnswer(&answer, &resp)
+
+	utils.SetState(tgid, answer.NextState)
+	utils.SetVar(tgid, answer.SetVariable, answer.SetValue)
 
 	return c.JSON(200, resp)
 }
