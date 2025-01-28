@@ -9,6 +9,7 @@ import (
 func BotApiRoutes(group *echo.Group) {
 
 	group.POST("/commands", handlers.BotApiCommands)
-	group.GET("/messages/", handlers.GetMessageById)
-
+	group.GET("/messages/:id", handlers.GetMessageById)
+	group.POST("/callbacks", handlers.CallbackHandler)
+	group.POST("/messages", handlers.TextHandler)
 }

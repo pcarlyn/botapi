@@ -32,6 +32,21 @@ type Message struct {
 	// VoiceChatParticipantsInvited  string                        `json:"voice_chat_participants_invited"`
 }
 
+type ClbMessage struct {
+	MessageID                     int                           `json:"message_id"`
+	From                          ClbUser                       `json:"from"`
+	Chat                          Chat                          `json:"chat"`
+	Date                          int64                         `json:"date"`
+	Text                          string                        `json:"text"`
+	Entities                      []Entity                      `json:"entities"`
+	MessageAutoDeleteTimerChanged MessageAutoDeleteTimerChanged `json:"message_auto_delete_timer_changed"`
+	// ProximityAlertTriggered       ProximityAlertTriggered       `json:"proximity_alert_triggered"`
+	// VoiceChatScheduled            string                        `json:"voice_chat_scheduled"`
+	// VoiceChatStarted              string                        `json:"voice_chat_started"`
+	// VoiceChatEnded                string                        `json:"voice_chat_ended"`
+	// VoiceChatParticipantsInvited  string                        `json:"voice_chat_participants_invited"`
+}
+
 type MessageAutoDeleteTimerChanged struct {
 	MessageAutoDeleteTime int `json:"message_auto_delete_time"`
 }
@@ -42,12 +57,19 @@ type ProximityAlertTriggered struct {
 }
 
 type User struct {
-	ID int `json:"id"`
-	// IsBot        bool   `json:"is_bot"`
+	ID           int    `json:"id"`
 	FirstName    string `json:"first_name"`
 	Username     string `json:"username"`
 	LanguageCode string `json:"language_code"`
+	// IsBot        bool   `json:"is_bot"`
 	// IsPremium    bool   `json:"is_premium"`
+}
+
+type ClbUser struct {
+	ID        int    `json:"id"`
+	FirstName string `json:"first_name"`
+	Username  string `json:"username"`
+	IsBot     bool   `json:"is_bot"`
 }
 
 type Chat struct {
@@ -63,4 +85,15 @@ type Entity struct {
 	Offset int    `json:"offset"`
 	Length int    `json:"length"`
 	Type   string `json:"type"`
+}
+
+type CallBackData struct {
+	UpdateID      int           `json:"update_id"`
+	CallbackQuery CallbackQuery `json:"callback_query"`
+}
+
+type CallbackQuery struct {
+	ID      string     `json:"id"`
+	From    User       `json:"from"`
+	Message ClbMessage `json:"message"`
 }
