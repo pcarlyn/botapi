@@ -24,6 +24,21 @@ func BuildAnswer(req *models.ResponseAnswer, resp *models.ControllerResponce) {
 	fmt.Printf("%+v\n", resp)
 }
 
+func BuildAnswerV2(req *models.GetResponseAnswer, resp *models.ControllerResponce) {
+	resp.Answer = req.Data.Answer
+	resp.Delay = req.Data.Delay
+	resp.Keyboard = req.Data.Keyboard
+	resp.IsKb = req.Data.IsKb
+	resp.IsNextMsg = req.Data.IsNextMessage
+	if req.Data.IsNextMessage {
+		resp.Id = req.Data.Id
+	} else {
+		resp.Id = 0
+	}
+	fmt.Println(resp.IsNextMsg)
+	fmt.Printf("%+v\n", resp)
+}
+
 func FilterAnswers(answers []models.ResponseAnswer, state models.RState, variables []models.VariablesResponse) models.ResponseAnswer {
 
 	var answer models.ResponseAnswer

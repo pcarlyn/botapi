@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"start/internal/models"
+	"start/internal/utils"
 	"start/internal/utils/requests/answers"
 	"strconv"
 
@@ -14,5 +16,9 @@ func GetMessageById(c echo.Context) error {
 
 	answer, statusCode := answers.GetAnswerById(id)
 
-	return c.JSON(statusCode, answer)
+	var responseAnswer models.ControllerResponce
+
+	utils.BuildAnswerV2(&answer, &responseAnswer)
+
+	return c.JSON(statusCode, responseAnswer)
 }
