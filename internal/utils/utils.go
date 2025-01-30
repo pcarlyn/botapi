@@ -24,18 +24,19 @@ func BuildAnswer(req *models.ResponseAnswer, resp *models.ControllerResponce) {
 	fmt.Printf("%+v\n", resp)
 }
 
-func BuildAnswerV2(req *models.GetResponseAnswer, resp *models.ControllerResponce) {
+func BuildAnswerV2(req *models.GetResponseAnswer, resp *models.ResponseAnswer) {
 	resp.Answer = req.Data.Answer
 	resp.Delay = req.Data.Delay
 	resp.Keyboard = req.Data.Keyboard
 	resp.IsKb = req.Data.IsKb
-	resp.IsNextMsg = req.Data.IsNextMessage
+	resp.IsNextMessage = req.Data.IsNextMessage
+	resp.NextMessage = req.Data.NextMessage
 	if req.Data.IsNextMessage {
 		resp.Id = req.Data.Id
 	} else {
 		resp.Id = 0
 	}
-	fmt.Println(resp.IsNextMsg)
+	fmt.Println(resp.IsNextMessage)
 	fmt.Printf("%+v\n", resp)
 }
 

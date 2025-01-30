@@ -16,7 +16,7 @@ func GetMessageById(c echo.Context) error {
 
 	answer, statusCode := answers.GetAnswerById(id)
 
-	var responseAnswer models.ControllerResponce
+	var responseAnswer models.ResponseAnswer
 
 	utils.BuildAnswerV2(&answer, &responseAnswer)
 
