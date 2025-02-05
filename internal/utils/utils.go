@@ -15,6 +15,7 @@ func BuildAnswer(req *models.ResponseAnswer, resp *models.ControllerResponce) {
 	resp.Keyboard = req.Keyboard
 	resp.IsKb = req.IsKb
 	resp.IsNextMsg = req.IsNextMessage
+	resp.NextMessage = req.NextMessage
 	if req.IsNextMessage {
 		resp.Id = req.Id
 	} else {
