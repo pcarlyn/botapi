@@ -10,6 +10,16 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// CallbackHandler godoc
+// @Summary Обработка callback-запросов от Telegram
+// @Description Обрабатывает callback-запрос, фильтрует ответы и обновляет состояние и переменные пользователя
+// @Tags BotAPI
+// @Accept  json
+// @Produce  json
+// @Param callback body models.CallBackData true "Данные callback-запроса"
+// @Success 200 {object} models.ControllerResponce
+// @Failure 400 {object} map[string]interface{} "Ошибка привязки данных"
+// @Router /botapi/v1/callbacks [post]
 func CallbackHandler(c echo.Context) error {
 
 	var resp models.ControllerResponce

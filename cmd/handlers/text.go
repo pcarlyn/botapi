@@ -10,6 +10,16 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// TextHandler godoc
+// @Summary Обработка текстовых сообщений от Telegram-бота
+// @Description Получает обычное текстовое сообщение от пользователя, подбирает ответ, обновляет состояние и переменные
+// @Tags BotAPI
+// @Accept  json
+// @Produce  json
+// @Param message body models.Result true "Текстовое сообщение от Telegram"
+// @Success 200 {object} models.ControllerResponce
+// @Failure 400 {object} map[string]interface{} "Ошибка при обработке запроса"
+// @Router /botapi/v1/messages [post]
 func TextHandler(c echo.Context) error {
 	var userData models.Result
 	var resp models.ControllerResponce

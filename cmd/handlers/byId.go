@@ -9,6 +9,17 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// GetMessageById godoc
+// @Summary Получить сообщение по ID
+// @Description Возвращает объект сообщения по его идентификатору
+// @Tags BotAPI
+// @Accept  json
+// @Produce  json
+// @Param id path int true "ID сообщения"
+// @Success 200 {object} models.ResponseAnswer
+// @Failure 400 {object} map[string]interface{} "Ошибка при обработке запроса"
+// @Failure 404 {object} map[string]interface{} "Сообщение не найдено"
+// @Router /botapi/v1/messages/{id} [get]
 func GetMessageById(c echo.Context) error {
 
 	strId := c.Param("id")

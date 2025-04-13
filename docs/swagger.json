@@ -1,0 +1,937 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API Server for Frontend and Bot",
+        "title": "START-API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "basePath": "/",
+    "paths": {
+        "/botapi/v1/callbacks": {
+            "post": {
+                "description": "Обрабатывает callback-запрос, фильтрует ответы и обновляет состояние и переменные пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotAPI"
+                ],
+                "summary": "Обработка callback-запросов от Telegram",
+                "parameters": [
+                    {
+                        "description": "Данные callback-запроса",
+                        "name": "callback",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CallBackData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ControllerResponce"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка привязки данных",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/botapi/v1/commands": {
+            "post": {
+                "description": "Получает команду от пользователя (например, /start), фильтрует ответ и возвращает подходящее сообщение, обновляя состояние и переменные",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotAPI"
+                ],
+                "summary": "Обработка команд от Telegram-бота",
+                "parameters": [
+                    {
+                        "description": "Входящее сообщение от Telegram",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Result"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ControllerResponce"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка при обработке запроса",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/botapi/v1/messages": {
+            "post": {
+                "description": "Получает обычное текстовое сообщение от пользователя, подбирает ответ, обновляет состояние и переменные",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotAPI"
+                ],
+                "summary": "Обработка текстовых сообщений от Telegram-бота",
+                "parameters": [
+                    {
+                        "description": "Текстовое сообщение от Telegram",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Result"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ControllerResponce"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка при обработке запроса",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/botapi/v1/messages/{id}": {
+            "get": {
+                "description": "Возвращает объект сообщения по его идентификатору",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotAPI"
+                ],
+                "summary": "Получить сообщение по ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID сообщения",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResponseAnswer"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка при обработке запроса",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Сообщение не найдено",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/frontapi/v1/processes": {
+            "get": {
+                "description": "Получаем список всех процессов",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "processes"
+                ],
+                "summary": "Получение всех процессов",
+                "responses": {
+                    "200": {
+                        "description": "Список процессов",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.SchedulerAnswer"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Запускает новый процесс на сервере с переданными данными",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "processes"
+                ],
+                "summary": "Запуск процесса",
+                "parameters": [
+                    {
+                        "description": "Данные для запуска процесса",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Process"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Процесс успешно запущен",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Неверные входные данные",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка запуска процесса",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/frontapi/v1/processes/{id}": {
+            "get": {
+                "description": "Получаем процесс по его ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "processes"
+                ],
+                "summary": "Получение процесса по ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID процесса",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Процесс",
+                        "schema": {
+                            "$ref": "#/definitions/models.ProcessAnswer"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка: неверный ID",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ошибка: процесс не найден",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Завершаем процесс по переданному ID процесса",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "processes"
+                ],
+                "summary": "Завершение процесса по ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID процесса для завершения",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Процесс успешно завершен",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Неверный ID",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Не удалось завершить процесс",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/frontapi/v1/schedulers": {
+            "get": {
+                "description": "Возвращает массив всех задач с датами в часовом поясе Europe/Moscow",
+                "tags": [
+                    "scheduler"
+                ],
+                "summary": "Получить список всех задач",
+                "responses": {
+                    "200": {
+                        "description": "Список задач",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "additionalProperties": true
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера при получении задач",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.SchedulerAnswer"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Создает задачу, которая будет выполнена в будущем времени",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "scheduler"
+                ],
+                "summary": "Создать задачу",
+                "parameters": [
+                    {
+                        "description": "Данные новой задачи",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SchedulerMsg"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Задача успешно запланирована",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Неверные входные данные или время отправки в прошлом",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/frontapi/v1/schedulers/{id}": {
+            "get": {
+                "description": "Возвращает полную информацию о задаче, включая время создания, обновления и отправки",
+                "tags": [
+                    "scheduler"
+                ],
+                "summary": "Получить задачу по ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID задачи (ObjectID)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Информация о задаче",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Неверный ID",
+                        "schema": {
+                            "$ref": "#/definitions/models.SchedulerAnswer"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Обновляет параметры ранее запланированной задачи по ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "scheduler"
+                ],
+                "summary": "Обновить задачу",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID задачи",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Обновленные данные задачи",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SchedulerMsg"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Задача успешно обновлена и перепланирована",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Неверные входные данные или время отправки в прошлом",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Останавливает таймер и помечает задачу как \"canceled\" по переданному ID",
+                "tags": [
+                    "scheduler"
+                ],
+                "summary": "Отмена задачи",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID задачи (ObjectID)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Задача успешно отменена",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Неверный ID",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Задача не найдена",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.Button": {
+            "type": "object",
+            "properties": {
+                "caption": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "string"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "row": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.CallBackData": {
+            "type": "object",
+            "properties": {
+                "callback_query": {
+                    "$ref": "#/definitions/models.CallbackQuery"
+                },
+                "update_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.CallbackQuery": {
+            "type": "object",
+            "properties": {
+                "from": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "message": {
+                    "$ref": "#/definitions/models.ClbMessage"
+                }
+            }
+        },
+        "models.Chat": {
+            "type": "object",
+            "properties": {
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "photo": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ClbMessage": {
+            "type": "object",
+            "properties": {
+                "chat": {
+                    "$ref": "#/definitions/models.Chat"
+                },
+                "date": {
+                    "type": "integer"
+                },
+                "entities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Entity"
+                    }
+                },
+                "from": {
+                    "$ref": "#/definitions/models.ClbUser"
+                },
+                "message_auto_delete_timer_changed": {
+                    "$ref": "#/definitions/models.MessageAutoDeleteTimerChanged"
+                },
+                "message_id": {
+                    "type": "integer"
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ClbUser": {
+            "type": "object",
+            "properties": {
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_bot": {
+                    "type": "boolean"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Condition": {
+            "type": "object",
+            "properties": {
+                "caption": {
+                    "type": "string"
+                },
+                "operation": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                },
+                "variable": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ControllerResponce": {
+            "type": "object",
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "delay": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isKb": {
+                    "type": "boolean"
+                },
+                "isNextMsg": {
+                    "type": "boolean"
+                },
+                "keyboard": {
+                    "$ref": "#/definitions/models.Keyboard"
+                },
+                "nextMsg": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Entity": {
+            "type": "object",
+            "properties": {
+                "length": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Keyboard": {
+            "type": "object",
+            "properties": {
+                "buttons": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Button"
+                    }
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Message": {
+            "type": "object",
+            "properties": {
+                "chat": {
+                    "$ref": "#/definitions/models.Chat"
+                },
+                "date": {
+                    "type": "integer"
+                },
+                "entities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Entity"
+                    }
+                },
+                "from": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "message_auto_delete_timer_changed": {
+                    "$ref": "#/definitions/models.MessageAutoDeleteTimerChanged"
+                },
+                "message_id": {
+                    "type": "integer"
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.MessageAutoDeleteTimerChanged": {
+            "type": "object",
+            "properties": {
+                "message_auto_delete_time": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Process": {
+            "type": "object",
+            "properties": {
+                "args": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "path": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ProcessAnswer": {
+            "type": "object",
+            "properties": {
+                "cmd": {
+                    "$ref": "#/definitions/models.Process"
+                },
+                "pid": {
+                    "type": "integer"
+                },
+                "run_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ResponseAnswer": {
+            "type": "object",
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "conditions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Condition"
+                    }
+                },
+                "delay": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isKb": {
+                    "type": "boolean"
+                },
+                "isNextMsg": {
+                    "type": "boolean"
+                },
+                "keyboard": {
+                    "$ref": "#/definitions/models.Keyboard"
+                },
+                "nextMsg": {
+                    "type": "integer"
+                },
+                "nextState": {
+                    "type": "string"
+                },
+                "set_value": {
+                    "type": "string"
+                },
+                "set_variable": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Result": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "$ref": "#/definitions/models.Message"
+                },
+                "update_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.SchedulerAnswer": {
+            "type": "object",
+            "properties": {
+                "channel": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "recipient": {
+                    "type": "string"
+                },
+                "send_at": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tag": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.SchedulerMsg": {
+            "type": "object",
+            "properties": {
+                "channel": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "recipient": {
+                    "type": "string"
+                },
+                "send_at": {
+                    "type": "string"
+                },
+                "tag": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "properties": {
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "language_code": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
+    }
+}

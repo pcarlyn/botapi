@@ -12,6 +12,16 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// BotApiCommands godoc
+// @Summary Обработка команд от Telegram-бота
+// @Description Получает команду от пользователя (например, /start), фильтрует ответ и возвращает подходящее сообщение, обновляя состояние и переменные
+// @Tags BotAPI
+// @Accept  json
+// @Produce  json
+// @Param message body models.Result true "Входящее сообщение от Telegram"
+// @Success 200 {object} models.ControllerResponce
+// @Failure 400 {object} map[string]interface{} "Ошибка при обработке запроса"
+// @Router /botapi/v1/commands [post]
 func BotApiCommands(c echo.Context) error {
 
 	var userData models.Result

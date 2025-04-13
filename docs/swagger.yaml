@@ -1,0 +1,623 @@
+basePath: /
+definitions:
+  models.Button:
+    properties:
+      caption:
+        type: string
+      data:
+        type: string
+      order:
+        type: integer
+      row:
+        type: integer
+    type: object
+  models.CallBackData:
+    properties:
+      callback_query:
+        $ref: '#/definitions/models.CallbackQuery'
+      update_id:
+        type: integer
+    type: object
+  models.CallbackQuery:
+    properties:
+      from:
+        $ref: '#/definitions/models.User'
+      id:
+        type: string
+      message:
+        $ref: '#/definitions/models.ClbMessage'
+    type: object
+  models.Chat:
+    properties:
+      first_name:
+        type: string
+      id:
+        type: integer
+      location:
+        type: string
+      photo:
+        type: string
+      type:
+        type: string
+      username:
+        type: string
+    type: object
+  models.ClbMessage:
+    properties:
+      chat:
+        $ref: '#/definitions/models.Chat'
+      date:
+        type: integer
+      entities:
+        items:
+          $ref: '#/definitions/models.Entity'
+        type: array
+      from:
+        $ref: '#/definitions/models.ClbUser'
+      message_auto_delete_timer_changed:
+        $ref: '#/definitions/models.MessageAutoDeleteTimerChanged'
+      message_id:
+        type: integer
+      text:
+        type: string
+    type: object
+  models.ClbUser:
+    properties:
+      first_name:
+        type: string
+      id:
+        type: integer
+      is_bot:
+        type: boolean
+      username:
+        type: string
+    type: object
+  models.Condition:
+    properties:
+      caption:
+        type: string
+      operation:
+        type: string
+      value:
+        type: string
+      variable:
+        type: string
+    type: object
+  models.ControllerResponce:
+    properties:
+      answer:
+        type: string
+      delay:
+        type: integer
+      id:
+        type: integer
+      isKb:
+        type: boolean
+      isNextMsg:
+        type: boolean
+      keyboard:
+        $ref: '#/definitions/models.Keyboard'
+      nextMsg:
+        type: integer
+    type: object
+  models.Entity:
+    properties:
+      length:
+        type: integer
+      offset:
+        type: integer
+      type:
+        type: string
+    type: object
+  models.Keyboard:
+    properties:
+      buttons:
+        items:
+          $ref: '#/definitions/models.Button'
+        type: array
+      type:
+        type: string
+    type: object
+  models.Message:
+    properties:
+      chat:
+        $ref: '#/definitions/models.Chat'
+      date:
+        type: integer
+      entities:
+        items:
+          $ref: '#/definitions/models.Entity'
+        type: array
+      from:
+        $ref: '#/definitions/models.User'
+      message_auto_delete_timer_changed:
+        $ref: '#/definitions/models.MessageAutoDeleteTimerChanged'
+      message_id:
+        type: integer
+      text:
+        type: string
+    type: object
+  models.MessageAutoDeleteTimerChanged:
+    properties:
+      message_auto_delete_time:
+        type: integer
+    type: object
+  models.Process:
+    properties:
+      args:
+        items:
+          type: string
+        type: array
+      path:
+        type: string
+    type: object
+  models.ProcessAnswer:
+    properties:
+      cmd:
+        $ref: '#/definitions/models.Process'
+      pid:
+        type: integer
+      run_at:
+        type: string
+    type: object
+  models.ResponseAnswer:
+    properties:
+      answer:
+        type: string
+      conditions:
+        items:
+          $ref: '#/definitions/models.Condition'
+        type: array
+      delay:
+        type: integer
+      id:
+        type: integer
+      isKb:
+        type: boolean
+      isNextMsg:
+        type: boolean
+      keyboard:
+        $ref: '#/definitions/models.Keyboard'
+      nextMsg:
+        type: integer
+      nextState:
+        type: string
+      set_value:
+        type: string
+      set_variable:
+        type: string
+      state:
+        type: string
+    type: object
+  models.Result:
+    properties:
+      message:
+        $ref: '#/definitions/models.Message'
+      update_id:
+        type: integer
+    type: object
+  models.SchedulerAnswer:
+    properties:
+      channel:
+        type: string
+      content:
+        type: string
+      created_at:
+        type: string
+      recipient:
+        type: string
+      send_at:
+        type: string
+      status:
+        type: string
+      tag:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.SchedulerMsg:
+    properties:
+      channel:
+        type: string
+      content:
+        type: string
+      recipient:
+        type: string
+      send_at:
+        type: string
+      tag:
+        type: string
+    type: object
+  models.User:
+    properties:
+      first_name:
+        type: string
+      id:
+        type: integer
+      language_code:
+        type: string
+      username:
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+info:
+  contact: {}
+  description: API Server for Frontend and Bot
+  title: START-API
+  version: "1.0"
+paths:
+  /botapi/v1/callbacks:
+    post:
+      consumes:
+      - application/json
+      description: Обрабатывает callback-запрос, фильтрует ответы и обновляет состояние
+        и переменные пользователя
+      parameters:
+      - description: Данные callback-запроса
+        in: body
+        name: callback
+        required: true
+        schema:
+          $ref: '#/definitions/models.CallBackData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ControllerResponce'
+        "400":
+          description: Ошибка привязки данных
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Обработка callback-запросов от Telegram
+      tags:
+      - BotAPI
+  /botapi/v1/commands:
+    post:
+      consumes:
+      - application/json
+      description: Получает команду от пользователя (например, /start), фильтрует
+        ответ и возвращает подходящее сообщение, обновляя состояние и переменные
+      parameters:
+      - description: Входящее сообщение от Telegram
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/models.Result'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ControllerResponce'
+        "400":
+          description: Ошибка при обработке запроса
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Обработка команд от Telegram-бота
+      tags:
+      - BotAPI
+  /botapi/v1/messages:
+    post:
+      consumes:
+      - application/json
+      description: Получает обычное текстовое сообщение от пользователя, подбирает
+        ответ, обновляет состояние и переменные
+      parameters:
+      - description: Текстовое сообщение от Telegram
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/models.Result'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ControllerResponce'
+        "400":
+          description: Ошибка при обработке запроса
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Обработка текстовых сообщений от Telegram-бота
+      tags:
+      - BotAPI
+  /botapi/v1/messages/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает объект сообщения по его идентификатору
+      parameters:
+      - description: ID сообщения
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponseAnswer'
+        "400":
+          description: Ошибка при обработке запроса
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Сообщение не найдено
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить сообщение по ID
+      tags:
+      - BotAPI
+  /frontapi/v1/processes:
+    get:
+      consumes:
+      - application/json
+      description: Получаем список всех процессов
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список процессов
+          schema:
+            items:
+              $ref: '#/definitions/models.SchedulerAnswer'
+            type: array
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получение всех процессов
+      tags:
+      - processes
+    post:
+      consumes:
+      - application/json
+      description: Запускает новый процесс на сервере с переданными данными
+      parameters:
+      - description: Данные для запуска процесса
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.Process'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Процесс успешно запущен
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Неверные входные данные
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Ошибка запуска процесса
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Запуск процесса
+      tags:
+      - processes
+  /frontapi/v1/processes/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Завершаем процесс по переданному ID процесса
+      parameters:
+      - description: ID процесса для завершения
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Процесс успешно завершен
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Неверный ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Не удалось завершить процесс
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Завершение процесса по ID
+      tags:
+      - processes
+    get:
+      consumes:
+      - application/json
+      description: Получаем процесс по его ID
+      parameters:
+      - description: ID процесса
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Процесс
+          schema:
+            $ref: '#/definitions/models.ProcessAnswer'
+        "400":
+          description: 'Ошибка: неверный ID'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: 'Ошибка: процесс не найден'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получение процесса по ID
+      tags:
+      - processes
+  /frontapi/v1/schedulers:
+    get:
+      description: Возвращает массив всех задач с датами в часовом поясе Europe/Moscow
+      responses:
+        "200":
+          description: Список задач
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+        "500":
+          description: Ошибка сервера при получении задач
+          schema:
+            items:
+              $ref: '#/definitions/models.SchedulerAnswer'
+            type: array
+      summary: Получить список всех задач
+      tags:
+      - scheduler
+    post:
+      consumes:
+      - application/json
+      description: Создает задачу, которая будет выполнена в будущем времени
+      parameters:
+      - description: Данные новой задачи
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.SchedulerMsg'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Задача успешно запланирована
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Неверные входные данные или время отправки в прошлом
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Создать задачу
+      tags:
+      - scheduler
+  /frontapi/v1/schedulers/{id}:
+    delete:
+      description: Останавливает таймер и помечает задачу как "canceled" по переданному
+        ID
+      parameters:
+      - description: ID задачи (ObjectID)
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Задача успешно отменена
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Неверный ID
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Задача не найдена
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Отмена задачи
+      tags:
+      - scheduler
+    get:
+      description: Возвращает полную информацию о задаче, включая время создания,
+        обновления и отправки
+      parameters:
+      - description: ID задачи (ObjectID)
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Информация о задаче
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Неверный ID
+          schema:
+            $ref: '#/definitions/models.SchedulerAnswer'
+      summary: Получить задачу по ID
+      tags:
+      - scheduler
+    put:
+      consumes:
+      - application/json
+      description: Обновляет параметры ранее запланированной задачи по ID
+      parameters:
+      - description: ID задачи
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Обновленные данные задачи
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.SchedulerMsg'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Задача успешно обновлена и перепланирована
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Неверные входные данные или время отправки в прошлом
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Обновить задачу
+      tags:
+      - scheduler
+swagger: "2.0"
